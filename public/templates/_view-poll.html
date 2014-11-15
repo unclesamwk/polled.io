@@ -1,0 +1,19 @@
+<div {{#if navigatedTo}}class="offscreen--right fadeInRight"{{/if}}>
+	<h1 class="heading">{{ model.title }}</h1>
+	<div data-region="choices"></div>
+	<div data-region="chart"></div>
+
+	<div class="share">
+		<h3>Share your poll</h3>
+		<input type="text" class="share-input" value="http://polled.io./poll/{{ model.url }}" />
+		<ul>
+			<li>
+				<a class="icon-twitter" href="https://twitter.com/intent/tweet?text={{ model.title}}+http://polled.io/poll/{{ model.url }}
+		&hashtags=polled.io"></a>
+			</li>
+			<li>
+				<a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://polled.io/poll/{{ model.url }}"></a>
+			</li>
+		</ul>
+	</div>
+</div>
