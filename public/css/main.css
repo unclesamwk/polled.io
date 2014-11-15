@@ -64,6 +64,12 @@ a {
 	margin: 0 0 24px;
 }
 
+	@media only screen
+	and (max-width : 939px) {
+		.heading {
+			margin: 24px 0 48px;
+		}
+	}
 
 header {
 	text-align: left;
@@ -246,6 +252,12 @@ ul {
 .share {
 	margin-top: 120px;
 }
+	@media only screen
+	and (max-width : 939px) {
+		.share {
+			margin-top: 44px;
+		}
+	}
 
 
 .chart {
