@@ -47,6 +47,7 @@ exports.savePoll = function(req, res, next) {
 		    	if (err) {
 		    		res.send(404);
 		    	} else {
+		    		next(foundPoll);
 		    		writeCookie(req, res, pollID);
 	        		res.json(200);
 		    	}
