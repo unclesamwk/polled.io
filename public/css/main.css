@@ -239,6 +239,7 @@ td {
 		background-image: linear-gradient(to top,rgba(255,255,255,.05),rgba(255,255,255,.1) 90%);
 		text-align: center;
 		color: #ffffff;
+		font-weight: 700;
 	}
 
 ul {
