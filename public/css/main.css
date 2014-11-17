@@ -34,15 +34,9 @@ body {
 	font-weight: 300;
 }
 
-
-
 a {
-	color: #00B7FF;
+	color: #fff;
 }
-	a:hover {
-		color: #00abee;
-	}
-
 
 .container {
 	width: 940px;
