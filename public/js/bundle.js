@@ -27306,7 +27306,7 @@ module.exports = HandlebarsCompiler.template({"1":function(depth0,helpers,partia
   if (stack1 != null) { buffer += stack1; }
   return buffer + ">\n	<h1 class=\"heading\">"
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
-    + "</h1>\n	<div data-region=\"choices\"></div>\n\n	<div class=\"share\">\n		<h3 class=\"share-title\">Share your poll</h3>\n		<input type=\"text\" class=\"share-input\" value=\"http://polled.io./poll/"
+    + "</h1>\n	<div data-region=\"choices\"></div>\n\n	<div class=\"share\">\n		<h3 class=\"share-title\">Share your poll</h3>\n		<input type=\"text\" class=\"share-input\" value=\"http://polled.io/poll/"
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.url : stack1), depth0))
     + "\" />\n		<ul>\n			<li>\n				<a class=\"icon-twitter\" href=\"https://twitter.com/intent/tweet?text="
     + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.title : stack1), depth0))
