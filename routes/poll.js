@@ -33,16 +33,14 @@ exports.createPoll = function(req, res, next) {
 
 };
 
-exports.savePoll = function(req, res, next) {
+exports.vote = function(req, res, next) {
 	var poll = req.body,
-		pollID = poll._id;
+		pollID = poll._id,
+		index = poll.index;
 
 	return pollModel.findById(pollID, function(error, foundPoll) {
 		if (foundPoll) {
-			foundPoll.title =  poll.title || foundPoll.title,
-	        foundPoll.url =  poll.url || foundPoll.url,
-	        foundPoll.choices =  poll.choices || foundPoll.choices;
-
+			foundPoll.choices[index].votes += 1;
 		    foundPoll.save(function(err) {
 		    	if (err) {
 		    		res.send(404);

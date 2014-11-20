@@ -63,8 +63,8 @@ var routes = {
 //Poll
 app.get('/api/poll/:url', routes.poll.getPoll);
 app.post('/api/poll', routes.poll.createPoll);
-app.put('/api/poll/:url', function(req, res, next) {
-	routes.poll.savePoll(req, res, function(poll) {
+app.put('/api/poll/:url/vote', function(req, res, next) {
+	routes.poll.vote(req, res, function(poll) {
 		io.sockets.in(req.headers.referer).emit('voted', poll);
 	});
 });

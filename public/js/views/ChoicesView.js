@@ -9,7 +9,7 @@ var choiceView = require('./../views/ChoiceView.js');
  * Parent view for ChoiceView that are shown on /poll/:url
  *  - Renders each invidual choice
  *  	- Animates the bar width for each choice (based off of their votes vs total votes)
- *  	- Passes through the choices [key] value so it can update the vote accordingly in ChoiceView
+ *  	- Passes through the choices [index] value so it can update the vote accordingly in ChoiceView
  */
 module.exports = Backbone.View.extend({
 	tagName: 'table',
@@ -30,19 +30,19 @@ module.exports = Backbone.View.extend({
 	render: function() {
 		this.$el.empty();
 
-		_.each(this.model.get('choices'), function(value, key) {
-			this.renderChoice(this.model, value, key);
+		_.each(this.model.get('choices'), function(value, index) {
+			this.renderChoice(this.model, value, index);
 		}.bind(this));
 
 		_.defer(this.afterRender);
 
 		return this;
 	},
-	renderChoice: function(poll, choice, key, animate) {
+	renderChoice: function(poll, choice, index) {
 		this.$el.append(new choiceView({
 			model: poll,
 			choice: choice,
-			key: key,
+			index: index,
 			parent: this,
 			width: this.getChoiceWidth(choice.votes)
 		}).render().el);
@@ -54,7 +54,7 @@ module.exports = Backbone.View.extend({
 		 * Do the initial bar animation. Annoyingly cannot be done via this.updateBars()
 		 * Due to _.defers unwilingness to pass through 'this' scope.
 		 */
-		_.each($('.js-bar'), function(value, key) {
+		_.each($('.js-bar'), function(value, index) {
 			$(value).css('width', $(value).data('width') + '%');
 		});
 	},
@@ -65,7 +65,7 @@ module.exports = Backbone.View.extend({
 	 */
 	getVoteTotal: function() {
 		var total = 0;
-		_.each(this.model.get('choices'), function(value, key) {
+		_.each(this.model.get('choices'), function(value, index) {
 			total += value.votes;
 		});
 		return total;
@@ -81,14 +81,14 @@ module.exports = Backbone.View.extend({
 	 * animate 0 to [width] everytime, where as we want incremental animations.
 	 */
 	updateBars: function(choices) {
-		_.each($('.js-bar'), function(value, key) {
-			var width = this.getChoiceWidth(choices[key].votes);
+		_.each($('.js-bar'), function(value, index) {
+			var width = this.getChoiceWidth(choices[index].votes);
 			$(value).css('width', width);
 		}.bind(this));
 	},
 	updateVotes: function(choices) {
-		_.each($('.js-vote'), function(value, key) {
-			$(value).text(choices[key].votes);
+		_.each($('.js-vote'), function(value, index) {
+			$(value).text(choices[index].votes);
 		});
 	},
 });

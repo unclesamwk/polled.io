@@ -54,7 +54,7 @@ module.exports = Backbone.View.extend({
 	serializeForm: function() {
 		var choices = [];
 
-		_.each(this.$('.js-choice-input'), function(value, key) {
+		_.each(this.$('.js-choice-input'), function(value, index) {
 			var val = $(value).val();
 			if (val) {
 				choices.push({

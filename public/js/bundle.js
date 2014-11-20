@@ -26747,6 +26747,31 @@ module.exports = Backbone.Model.extend({
 	},
 
     /**
+     * Pass the model and the choices[index] to a route of
+     * api/poll/:url/vote to increase the vote by 1 on the server and
+     * send back the updated model, which will trigger a Socket.io event
+     * to update all clients.
+     */
+    vote: function(index, url, next) {
+        this.getByURL(url);
+        this.url += '/vote';
+
+        return Backbone.Model.prototype.save.call(this,
+            {
+                index: index
+            },
+            {
+                success: function() {
+                    next();
+                },
+                error: function(model, response) {
+                    console.log(response);
+                }
+            }
+        );
+    },
+
+    /**
      * Checks for empty title and requires at least two choices
      */
     validate: function(attrs) {
@@ -26917,8 +26942,8 @@ module.exports = Backbone.View.extend({
 		 * placeholders to be in order again.
 		 */
 		var $choiceInputs = $('.js-choice-input');
-		_.each($choiceInputs, function(value, key) {
-			$(value).attr('placeholder', 'Choice ' + ++key);
+		_.each($choiceInputs, function(value, index) {
+			$(value).attr('placeholder', 'Choice ' + ++index);
 		});
 	},
 });
@@ -26935,13 +26960,13 @@ var cookie = require('./../utils/cookies.js');
  * Renders an individual choice that can be voted on.
  * 	- Handles whether or not they've voted, displays button or not.
  * 	- Handles a user voting, this triggers a socket.io event, a model.set event.
- *  - Handles the colour of the bar, based off of the choice's [key]
+ *  - Handles the colour of the bar, based off of the choice's [index]
  */
 module.exports = Backbone.View.extend({
 	initialize: function(options) {
 		this.parent = options.parent; //Used to re-render all choices once a vote has been made
 		this.choice = options.choice;
-		this.key = options.key; //store the key of the choice in the array to be used when a vote is placed.
+		this.index = options.index; //store the index of the choice in the array to be used when a vote is placed.
 		this.hasVoted = cookie.hasVoted('polled.io', this.model.get('_id')); //polled-io is what the cookie is called when set via Node
 		this.width = options.width; //width of the bar to initially animate to
 
@@ -26960,31 +26985,26 @@ module.exports = Backbone.View.extend({
 		this.$el.html(template({
 			model: this.model.toJSON(),
 			choice: this.choice,
-			key: this.key,
+			index: this.index,
 			hasVoted: this.hasVoted,
 			width: this.width
 		}));
 
-		this.$el.find('.js-bar').css('background', this.colors[this.key]);
+		this.$el.find('.js-bar').css('background', this.colors[this.index]);
 
 		return this;
 	},
 
 
 	vote: function(ev) {
-		var key = $(ev.target).data('key'),
-			choices = this.model.get('choices');
+		var index = $(ev.target).data('index'),
+			url = this.model.get('url');
 
-		this.model.set(('choices')[key].votes, ++choices[key].votes);
-		this.model.save({}, {
-			success: function() {
-				this.parent.render(); //on a users first vote, start from a fresh view.
-			}.bind(this),
-			error: function(model, response) {
-				console.log(response);
-			}
-		});
+		this.model.vote(index, url, function() {
+			this.parent.render();
+		}.bind(this));
 	},
+
 });
 
 },{"../../templates/_choice.html":"/Users/tom/Sites/polled.io/public/templates/_choice.html","./../utils/cookies.js":"/Users/tom/Sites/polled.io/public/js/utils/cookies.js","backbone":"/Users/tom/Sites/polled.io/node_modules/backbone/backbone.js","jquery":"/Users/tom/Sites/polled.io/node_modules/jquery/dist/jquery.js","lodash":"/Users/tom/Sites/polled.io/node_modules/lodash/dist/lodash.js"}],"/Users/tom/Sites/polled.io/public/js/views/ChoicesView.js":[function(require,module,exports){
@@ -26999,7 +27019,7 @@ var choiceView = require('./../views/ChoiceView.js');
  * Parent view for ChoiceView that are shown on /poll/:url
  *  - Renders each invidual choice
  *  	- Animates the bar width for each choice (based off of their votes vs total votes)
- *  	- Passes through the choices [key] value so it can update the vote accordingly in ChoiceView
+ *  	- Passes through the choices [index] value so it can update the vote accordingly in ChoiceView
  */
 module.exports = Backbone.View.extend({
 	tagName: 'table',
@@ -27020,19 +27040,19 @@ module.exports = Backbone.View.extend({
 	render: function() {
 		this.$el.empty();
 
-		_.each(this.model.get('choices'), function(value, key) {
-			this.renderChoice(this.model, value, key);
+		_.each(this.model.get('choices'), function(value, index) {
+			this.renderChoice(this.model, value, index);
 		}.bind(this));
 
 		_.defer(this.afterRender);
 
 		return this;
 	},
-	renderChoice: function(poll, choice, key, animate) {
+	renderChoice: function(poll, choice, index) {
 		this.$el.append(new choiceView({
 			model: poll,
 			choice: choice,
-			key: key,
+			index: index,
 			parent: this,
 			width: this.getChoiceWidth(choice.votes)
 		}).render().el);
@@ -27044,7 +27064,7 @@ module.exports = Backbone.View.extend({
 		 * Do the initial bar animation. Annoyingly cannot be done via this.updateBars()
 		 * Due to _.defers unwilingness to pass through 'this' scope.
 		 */
-		_.each($('.js-bar'), function(value, key) {
+		_.each($('.js-bar'), function(value, index) {
 			$(value).css('width', $(value).data('width') + '%');
 		});
 	},
@@ -27055,7 +27075,7 @@ module.exports = Backbone.View.extend({
 	 */
 	getVoteTotal: function() {
 		var total = 0;
-		_.each(this.model.get('choices'), function(value, key) {
+		_.each(this.model.get('choices'), function(value, index) {
 			total += value.votes;
 		});
 		return total;
@@ -27071,14 +27091,14 @@ module.exports = Backbone.View.extend({
 	 * animate 0 to [width] everytime, where as we want incremental animations.
 	 */
 	updateBars: function(choices) {
-		_.each($('.js-bar'), function(value, key) {
-			var width = this.getChoiceWidth(choices[key].votes);
+		_.each($('.js-bar'), function(value, index) {
+			var width = this.getChoiceWidth(choices[index].votes);
 			$(value).css('width', width);
 		}.bind(this));
 	},
 	updateVotes: function(choices) {
-		_.each($('.js-vote'), function(value, key) {
-			$(value).text(choices[key].votes);
+		_.each($('.js-vote'), function(value, index) {
+			$(value).text(choices[index].votes);
 		});
 	},
 });
@@ -27140,7 +27160,7 @@ module.exports = Backbone.View.extend({
 	serializeForm: function() {
 		var choices = [];
 
-		_.each(this.$('.js-choice-input'), function(value, key) {
+		_.each(this.$('.js-choice-input'), function(value, index) {
 			var val = $(value).val();
 			if (val) {
 				choices.push({
@@ -27269,8 +27289,8 @@ module.exports = HandlebarsCompiler.template({"1":function(depth0,helpers,partia
   return "class=\"pulse\"";
   },"3":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "<button data-action-vote data-key=\""
-    + escapeExpression(((helper = (helper = helpers.key || (depth0 != null ? depth0.key : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"key","hash":{},"data":data}) : helper)))
+  return "<button data-action-vote data-index=\""
+    + escapeExpression(((helper = (helper = helpers.index || (depth0 != null ? depth0.index : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"index","hash":{},"data":data}) : helper)))
     + "\" class=\"button--vote\">Vote</button> ";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, helper, lambda=this.lambda, escapeExpression=this.escapeExpression, functionType="function", helperMissing=helpers.helperMissing, buffer = "<tr>\n	<td width=\"50%\">\n		"

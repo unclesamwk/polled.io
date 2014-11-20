@@ -38,8 +38,8 @@ module.exports = Backbone.View.extend({
 		 * placeholders to be in order again.
 		 */
 		var $choiceInputs = $('.js-choice-input');
-		_.each($choiceInputs, function(value, key) {
-			$(value).attr('placeholder', 'Choice ' + ++key);
+		_.each($choiceInputs, function(value, index) {
+			$(value).attr('placeholder', 'Choice ' + ++index);
 		});
 	},
 });
