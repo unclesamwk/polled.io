@@ -19,21 +19,21 @@ module.exports = Backbone.View.extend({
 		'click .share-input': 'selectText',
 	},
 
-    render: function() {
+	render: function() {
 		var template = require('../../templates/_view-poll.html');
-	    this.$el.html(template({
-	    	model: this.model,
-	    	navigatedTo: this.navigatedTo,
-	    	hasVoted: this.hasVoted
-	    }));
+		this.$el.html(template({
+			model: this.model,
+			navigatedTo: this.navigatedTo,
+			hasVoted: this.hasVoted
+		}));
 
 		document.title = 'Polled - ' + this.model.title;
 
-        return this;
-    },
+		return this;
+	},
 
-    selectText: function(ev) {
-    	ev.preventDefault();
-    	$(ev.target).select();
-    },
+	selectText: function(ev) {
+		ev.preventDefault();
+		$(ev.target).select();
+	},
 });

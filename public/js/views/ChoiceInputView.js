@@ -3,6 +3,7 @@ var $ = require('jquery');
 var _ = require('lodash');
 Backbone.$ = $;
 
+
 /**
  * ChoiceInputView
  * Handles the input fields for CreatePollView.js.
@@ -32,14 +33,13 @@ module.exports = Backbone.View.extend({
 
 	removeView: function() {
 		this.remove();
-
 		/**
 		 * When a view is removed, update all of the Choice [count]
 		 * placeholders to be in order again.
 		 */
 		var $choiceInputs = $('.js-choice-input');
-		_.each($choiceInputs, function(value, key) {
-			$(value).attr('placeholder', 'Choice ' + ++key);
+		_.each($choiceInputs, function(value, index) {
+			$(value).attr('placeholder', 'Choice ' + ++index);
 		});
 	},
 });

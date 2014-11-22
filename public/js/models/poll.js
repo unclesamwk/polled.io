@@ -29,6 +29,31 @@ module.exports = Backbone.Model.extend({
 	},
 
     /**
+     * Pass the model and the choices[index] to a route of
+     * api/poll/:url/vote to increase the vote by 1 on the server and
+     * send back the updated model, which will trigger a Socket.io event
+     * to update all clients.
+     */
+    vote: function(index, url, next) {
+        this.getByURL(url);
+        this.url += '/vote';
+
+        return Backbone.Model.prototype.save.call(this,
+            {
+                index: index
+            },
+            {
+                success: function() {
+                    next();
+                },
+                error: function(model, response) {
+                    console.log(response);
+                }
+            }
+        );
+    },
+
+    /**
      * Checks for empty title and requires at least two choices
      */
     validate: function(attrs) {
