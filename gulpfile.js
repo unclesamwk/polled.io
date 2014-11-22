@@ -15,6 +15,7 @@ gulp.task('scripts', function() {
 	var bundler = watchify(browserify('./public/js/app.js', watchify.args));
 	bundler.transform(hbsfy);
 	bundler.on('update', rebundle);
+
 	function rebundle() {
 		return bundler.bundle()
 			.pipe(source('bundle.js'))

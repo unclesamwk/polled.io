@@ -20,8 +20,8 @@ module.exports = Backbone.View.extend({
 		this.width = options.width; //width of the bar to initially animate to
 
 		this.colors = [
-			'#c0392b','#3498db','#2ecc71','#9b59b6','#1abc9c','#34495e',
-			'#f1c40f','#e67e22','#ecf0f1','#95a5a6'
+			'#c0392b', '#3498db', '#2ecc71', '#9b59b6', '#1abc9c', '#34495e',
+			'#f1c40f', '#e67e22', '#ecf0f1', '#95a5a6'
 		];
 	},
 	events: {

@@ -76,7 +76,7 @@ module.exports = Backbone.View.extend({
 	 */
 	showValidationErrors: function(model, error) {
 		var $pollTitle = $('.js-title'),
-			$choiceInputs = $('.js-choice-input').slice(0,2),
+			$choiceInputs = $('.js-choice-input').slice(0, 2),
 			$submit = $('.js-submit');
 
 		if (error.title) {
@@ -86,7 +86,7 @@ module.exports = Backbone.View.extend({
 		}
 
 		if (error.choices) {
-		   $choiceInputs.addClass('invalid');
+			$choiceInputs.addClass('invalid');
 		} else {
 			$choiceInputs.removeClass('invalid');
 		}

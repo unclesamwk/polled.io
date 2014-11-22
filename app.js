@@ -70,7 +70,9 @@ app.put('/api/poll/:url/vote', function(req, res, next) {
 });
 
 //Direct all normal traffic to / and allow backbone to dictate navigation.
-app.use(function(req, res, next){ return res.render('index'); });
+app.use(function(req, res, next) {
+	return res.render('index');
+});
 
 //404
 app.use(function(req, res, next) {
@@ -111,10 +113,10 @@ var io = require('socket.io')(server);
  * viewing that poll, because the PUT's request URL is passed in as the room to trigger. .join() can be viewed as, everyone on the
  * same web page.
  */
-io.sockets.on('connection', function (socket) {
+io.sockets.on('connection', function(socket) {
 	socket.join(socket.handshake.headers.referer);
 
-    socket.on('disconnect', function() {
-    	socket.leave(socket.handshake.headers.referer);
-    });
+	socket.on('disconnect', function() {
+		socket.leave(socket.handshake.headers.referer);
+	});
 });

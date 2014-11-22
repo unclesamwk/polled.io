@@ -26907,6 +26907,7 @@ var $ = require('jquery');
 var _ = require('lodash');
 Backbone.$ = $;
 
+
 /**
  * ChoiceInputView
  * Handles the input fields for CreatePollView.js.
@@ -26936,7 +26937,6 @@ module.exports = Backbone.View.extend({
 
 	removeView: function() {
 		this.remove();
-
 		/**
 		 * When a view is removed, update all of the Choice [count]
 		 * placeholders to be in order again.
@@ -26971,8 +26971,8 @@ module.exports = Backbone.View.extend({
 		this.width = options.width; //width of the bar to initially animate to
 
 		this.colors = [
-			'#c0392b','#3498db','#2ecc71','#9b59b6','#1abc9c','#34495e',
-			'#f1c40f','#e67e22','#ecf0f1','#95a5a6'
+			'#c0392b', '#3498db', '#2ecc71', '#9b59b6', '#1abc9c', '#34495e',
+			'#f1c40f', '#e67e22', '#ecf0f1', '#95a5a6'
 		];
 	},
 	events: {
@@ -27182,7 +27182,7 @@ module.exports = Backbone.View.extend({
 	 */
 	showValidationErrors: function(model, error) {
 		var $pollTitle = $('.js-title'),
-			$choiceInputs = $('.js-choice-input').slice(0,2),
+			$choiceInputs = $('.js-choice-input').slice(0, 2),
 			$submit = $('.js-submit');
 
 		if (error.title) {
@@ -27192,7 +27192,7 @@ module.exports = Backbone.View.extend({
 		}
 
 		if (error.choices) {
-		   $choiceInputs.addClass('invalid');
+			$choiceInputs.addClass('invalid');
 		} else {
 			$choiceInputs.removeClass('invalid');
 		}
@@ -27253,23 +27253,23 @@ module.exports = Backbone.View.extend({
 		'click .share-input': 'selectText',
 	},
 
-    render: function() {
+	render: function() {
 		var template = require('../../templates/_view-poll.html');
-	    this.$el.html(template({
-	    	model: this.model,
-	    	navigatedTo: this.navigatedTo,
-	    	hasVoted: this.hasVoted
-	    }));
+		this.$el.html(template({
+			model: this.model,
+			navigatedTo: this.navigatedTo,
+			hasVoted: this.hasVoted
+		}));
 
 		document.title = 'Polled - ' + this.model.title;
 
-        return this;
-    },
+		return this;
+	},
 
-    selectText: function(ev) {
-    	ev.preventDefault();
-    	$(ev.target).select();
-    },
+	selectText: function(ev) {
+		ev.preventDefault();
+		$(ev.target).select();
+	},
 });
 
 },{"../../templates/_view-poll.html":"/Users/tom/Sites/polled.io/public/templates/_view-poll.html","backbone":"/Users/tom/Sites/polled.io/node_modules/backbone/backbone.js","jquery":"/Users/tom/Sites/polled.io/node_modules/jquery/dist/jquery.js"}],"/Users/tom/Sites/polled.io/public/templates/_choice-input.html":[function(require,module,exports){
