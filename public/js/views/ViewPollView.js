@@ -33,7 +33,6 @@ module.exports = Backbone.View.extend({
 	},
 
 	selectText: function(ev) {
-		ev.preventDefault();
-		$(ev.target).select();
+		ev.target.setSelectionRange(0, 100);
 	},
 });
