@@ -1,4 +1,4 @@
-# Polled.io <deprecated>
+# Polled.io (deprecated)
 
 ## Description
 Polled is a real time polling app. It has a Node.js backend supported by Express.js. The views and front-end interactions are handled with Backbone.js. Users can create a poll, share their link and watch the the votes being updated in real time thank you to sockets.io.
