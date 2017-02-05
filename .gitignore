@@ -1,3 +1,8 @@
 node_modules/
-*.sublime-project
-*.sublime-workspace
+public/dist/
+dist/
+npm-debug.log
+.env
+.hot-update.json
+.hot-update.js
+.DS_STORE
